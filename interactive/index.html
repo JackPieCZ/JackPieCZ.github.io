@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Figures Gallery</title>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #f8f9fa; }
+        #sidebar { width: 320px; background-color: #212529; color: #fff; overflow-y: auto; display: flex; flex-direction: column; flex-shrink: 0; }
+        #sidebar-header { padding: 20px; background: #1a1d20; border-bottom: 1px solid #343a40; }
+        #sidebar h2 { font-size: 1.2rem; margin: 0; color: #f8f9fa; letter-spacing: 0.5px; }
+        .category { margin-top: 15px; }
+        .category-title { font-weight: bold; padding: 8px 20px; background: #343a40; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: #adb5bd; position: sticky; top: 0; z-index: 2; }
+        .file-list { list-style: none; padding: 0; margin: 0; }
+        .file-link { display: block; padding: 10px 20px 10px 25px; color: #ced4da; text-decoration: none; font-size: 0.85rem; line-height: 1.4; word-break: break-word; transition: all 0.2s; border-left: 3px solid transparent; }
+        .file-link:hover { background-color: #343a40; color: #fff; }
+        .file-link.active { background-color: #495057; color: #fff; border-left-color: #0d6efd; font-weight: 500; }
+        #main { flex-grow: 1; display: flex; flex-direction: column; background: #fff; }
+        #header { padding: 15px 25px; background: #fff; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); z-index: 10; }
+        #current-title { margin: 0; font-size: 1.1rem; color: #212529; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+        #open-new { color: #0d6efd; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 4px; transition: background 0.2s; }
+        #open-new:hover { background: #f8f9fa; text-decoration: none; }
+        iframe { flex-grow: 1; border: none; width: 100%; height: 100%; background: #f8f9fa; }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+        #main ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
+        #main ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <div id="sidebar-header">
+            <h2>Figures Gallery</h2>
+        </div>
+        <div class="category">
+            <div class="category-title">Root</div>
+            <ul class="file-list">
+                <li><a href="#cross_cp_gap_box.html" class="file-link" data-src="cross_cp_gap_box.html">cross cp gap box</a></li>
+                <li><a href="#cross_pareto.html" class="file-link" data-src="cross_pareto.html">cross pareto</a></li>
+                <li><a href="#full_mode_attr_heatmap_objective.html" class="file-link" data-src="full_mode_attr_heatmap_objective.html">full mode attr heatmap objective</a></li>
+                <li><a href="#full_mode_gap_bar_objective.html" class="file-link" data-src="full_mode_gap_bar_objective.html">full mode gap bar objective</a></li>
+                <li><a href="#full_mode_gap_bar_total_moves.html" class="file-link" data-src="full_mode_gap_bar_total_moves.html">full mode gap bar total moves</a></li>
+                <li><a href="#full_mode_gap_std_scatter_objective.html" class="file-link" data-src="full_mode_gap_std_scatter_objective.html">full mode gap std scatter objective</a></li>
+                <li><a href="#full_mode_gap_std_scatter_total_moves.html" class="file-link" data-src="full_mode_gap_std_scatter_total_moves.html">full mode gap std scatter total moves</a></li>
+                <li><a href="#full_mode_moves_gap_scatter.html" class="file-link" data-src="full_mode_moves_gap_scatter.html">full mode moves gap scatter</a></li>
+                <li><a href="#full_mode_rank_cdf_objective.html" class="file-link" data-src="full_mode_rank_cdf_objective.html">full mode rank cdf objective</a></li>
+                <li><a href="#full_mode_rank_cdf_total_moves.html" class="file-link" data-src="full_mode_rank_cdf_total_moves.html">full mode rank cdf total moves</a></li>
+                <li><a href="#full_mode_winrate_bar_objective.html" class="file-link" data-src="full_mode_winrate_bar_objective.html">full mode winrate bar objective</a></li>
+                <li><a href="#full_mode_winrate_bar_total_moves.html" class="file-link" data-src="full_mode_winrate_bar_total_moves.html">full mode winrate bar total moves</a></li>
+                <li><a href="#perf_profile_quality.html" class="file-link" data-src="perf_profile_quality.html">perf profile quality</a></li>
+                <li><a href="#scaling_lanes_objective.html" class="file-link" data-src="scaling_lanes_objective.html">scaling lanes objective</a></li>
+                <li><a href="#scaling_lanes_time.html" class="file-link" data-src="scaling_lanes_time.html">scaling lanes time</a></li>
+                <li><a href="#scaling_movecap_objective.html" class="file-link" data-src="scaling_movecap_objective.html">scaling movecap objective</a></li>
+                <li><a href="#scaling_movecap_time.html" class="file-link" data-src="scaling_movecap_time.html">scaling movecap time</a></li>
+                <li><a href="#scaling_orders_objective.html" class="file-link" data-src="scaling_orders_objective.html">scaling orders objective</a></li>
+                <li><a href="#scaling_orders_time.html" class="file-link" data-src="scaling_orders_time.html">scaling orders time</a></li>
+                <li><a href="#scaling_stations_objective.html" class="file-link" data-src="scaling_stations_objective.html">scaling stations objective</a></li>
+                <li><a href="#scaling_stations_time.html" class="file-link" data-src="scaling_stations_time.html">scaling stations time</a></li>
+                <li><a href="#scatter_gap_vs_time.html" class="file-link" data-src="scatter_gap_vs_time.html">scatter gap vs time</a></li>
+                <li><a href="#twophase_gap_bar_objective.html" class="file-link" data-src="twophase_gap_bar_objective.html">twophase gap bar objective</a></li>
+                <li><a href="#twophase_gap_bar_total_moves.html" class="file-link" data-src="twophase_gap_bar_total_moves.html">twophase gap bar total moves</a></li>
+                <li><a href="#twophase_gap_std_scatter_objective.html" class="file-link" data-src="twophase_gap_std_scatter_objective.html">twophase gap std scatter objective</a></li>
+                <li><a href="#twophase_gap_std_scatter_total_moves.html" class="file-link" data-src="twophase_gap_std_scatter_total_moves.html">twophase gap std scatter total moves</a></li>
+                <li><a href="#twophase_moves_gap_scatter.html" class="file-link" data-src="twophase_moves_gap_scatter.html">twophase moves gap scatter</a></li>
+                <li><a href="#twophase_winrate_bar_objective.html" class="file-link" data-src="twophase_winrate_bar_objective.html">twophase winrate bar objective</a></li>
+                <li><a href="#twophase_winrate_bar_total_moves.html" class="file-link" data-src="twophase_winrate_bar_total_moves.html">twophase winrate bar total moves</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">AMA</div>
+            <ul class="file-list">
+                <li><a href="#AMA/AMA_cross_cp_gap_box.html" class="file-link" data-src="AMA/AMA_cross_cp_gap_box.html">AMA cross cp gap box</a></li>
+                <li><a href="#AMA/AMA_cross_cp_gap_by_param.html" class="file-link" data-src="AMA/AMA_cross_cp_gap_by_param.html">AMA cross cp gap by param</a></li>
+                <li><a href="#AMA/AMA_cross_pareto.html" class="file-link" data-src="AMA/AMA_cross_pareto.html">AMA cross pareto</a></li>
+                <li><a href="#AMA/AMA_perf_profile_quality.html" class="file-link" data-src="AMA/AMA_perf_profile_quality.html">AMA perf profile quality</a></li>
+                <li><a href="#AMA/AMA_scaling_lanes_objective.html" class="file-link" data-src="AMA/AMA_scaling_lanes_objective.html">AMA scaling lanes objective</a></li>
+                <li><a href="#AMA/AMA_scaling_lanes_time.html" class="file-link" data-src="AMA/AMA_scaling_lanes_time.html">AMA scaling lanes time</a></li>
+                <li><a href="#AMA/AMA_scaling_movecap_objective.html" class="file-link" data-src="AMA/AMA_scaling_movecap_objective.html">AMA scaling movecap objective</a></li>
+                <li><a href="#AMA/AMA_scaling_movecap_time.html" class="file-link" data-src="AMA/AMA_scaling_movecap_time.html">AMA scaling movecap time</a></li>
+                <li><a href="#AMA/AMA_scaling_orders_objective.html" class="file-link" data-src="AMA/AMA_scaling_orders_objective.html">AMA scaling orders objective</a></li>
+                <li><a href="#AMA/AMA_scaling_orders_time.html" class="file-link" data-src="AMA/AMA_scaling_orders_time.html">AMA scaling orders time</a></li>
+                <li><a href="#AMA/AMA_scaling_stations_objective.html" class="file-link" data-src="AMA/AMA_scaling_stations_objective.html">AMA scaling stations objective</a></li>
+                <li><a href="#AMA/AMA_scaling_stations_time.html" class="file-link" data-src="AMA/AMA_scaling_stations_time.html">AMA scaling stations time</a></li>
+                <li><a href="#AMA/AMA_scatter_gap_vs_time.html" class="file-link" data-src="AMA/AMA_scatter_gap_vs_time.html">AMA scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">AMA_Baseline</div>
+            <ul class="file-list">
+                <li><a href="#AMA_Baseline/AMA_Baseline_cross_cp_gap_box.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_cross_cp_gap_box.html">AMA Baseline cross cp gap box</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_cross_cp_gap_by_param.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_cross_cp_gap_by_param.html">AMA Baseline cross cp gap by param</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_cross_pareto.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_cross_pareto.html">AMA Baseline cross pareto</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_perf_profile_quality.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_perf_profile_quality.html">AMA Baseline perf profile quality</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_lanes_objective.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_lanes_objective.html">AMA Baseline scaling lanes objective</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_lanes_time.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_lanes_time.html">AMA Baseline scaling lanes time</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_movecap_objective.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_movecap_objective.html">AMA Baseline scaling movecap objective</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_movecap_time.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_movecap_time.html">AMA Baseline scaling movecap time</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_orders_objective.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_orders_objective.html">AMA Baseline scaling orders objective</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_orders_time.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_orders_time.html">AMA Baseline scaling orders time</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_stations_objective.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_stations_objective.html">AMA Baseline scaling stations objective</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scaling_stations_time.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scaling_stations_time.html">AMA Baseline scaling stations time</a></li>
+                <li><a href="#AMA_Baseline/AMA_Baseline_scatter_gap_vs_time.html" class="file-link" data-src="AMA_Baseline/AMA_Baseline_scatter_gap_vs_time.html">AMA Baseline scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">AMA_Baseline_GBS</div>
+            <ul class="file-list">
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_cross_cp_gap_box.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_cross_cp_gap_box.html">AMA Baseline GBS cross cp gap box</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_cross_cp_gap_by_param.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_cross_cp_gap_by_param.html">AMA Baseline GBS cross cp gap by param</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_cross_pareto.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_cross_pareto.html">AMA Baseline GBS cross pareto</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_perf_profile_quality.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_perf_profile_quality.html">AMA Baseline GBS perf profile quality</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_lanes_objective.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_lanes_objective.html">AMA Baseline GBS scaling lanes objective</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_lanes_time.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_lanes_time.html">AMA Baseline GBS scaling lanes time</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_movecap_objective.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_movecap_objective.html">AMA Baseline GBS scaling movecap objective</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_movecap_time.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_movecap_time.html">AMA Baseline GBS scaling movecap time</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_orders_objective.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_orders_objective.html">AMA Baseline GBS scaling orders objective</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_orders_time.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_orders_time.html">AMA Baseline GBS scaling orders time</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_stations_objective.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_stations_objective.html">AMA Baseline GBS scaling stations objective</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_stations_time.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scaling_stations_time.html">AMA Baseline GBS scaling stations time</a></li>
+                <li><a href="#AMA_Baseline_GBS/AMA_Baseline_GBS_scatter_gap_vs_time.html" class="file-link" data-src="AMA_Baseline_GBS/AMA_Baseline_GBS_scatter_gap_vs_time.html">AMA Baseline GBS scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">AMA_Baseline_GBS_CFSS</div>
+            <ul class="file-list">
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_cross_cp_gap_box.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_cross_cp_gap_box.html">AMA Baseline GBS CFSS cross cp gap box</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_cross_cp_gap_by_param.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_cross_cp_gap_by_param.html">AMA Baseline GBS CFSS cross cp gap by param</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_cross_pareto.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_cross_pareto.html">AMA Baseline GBS CFSS cross pareto</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_perf_profile_quality.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_perf_profile_quality.html">AMA Baseline GBS CFSS perf profile quality</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_lanes_objective.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_lanes_objective.html">AMA Baseline GBS CFSS scaling lanes objective</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_lanes_time.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_lanes_time.html">AMA Baseline GBS CFSS scaling lanes time</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_movecap_objective.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_movecap_objective.html">AMA Baseline GBS CFSS scaling movecap objective</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_movecap_time.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_movecap_time.html">AMA Baseline GBS CFSS scaling movecap time</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_orders_objective.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_orders_objective.html">AMA Baseline GBS CFSS scaling orders objective</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_orders_time.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_orders_time.html">AMA Baseline GBS CFSS scaling orders time</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_stations_objective.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_stations_objective.html">AMA Baseline GBS CFSS scaling stations objective</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_stations_time.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scaling_stations_time.html">AMA Baseline GBS CFSS scaling stations time</a></li>
+                <li><a href="#AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scatter_gap_vs_time.html" class="file-link" data-src="AMA_Baseline_GBS_CFSS/AMA_Baseline_GBS_CFSS_scatter_gap_vs_time.html">AMA Baseline GBS CFSS scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">Baseline</div>
+            <ul class="file-list">
+                <li><a href="#Baseline/Baseline_cross_cp_gap_box.html" class="file-link" data-src="Baseline/Baseline_cross_cp_gap_box.html">Baseline cross cp gap box</a></li>
+                <li><a href="#Baseline/Baseline_cross_cp_gap_by_param.html" class="file-link" data-src="Baseline/Baseline_cross_cp_gap_by_param.html">Baseline cross cp gap by param</a></li>
+                <li><a href="#Baseline/Baseline_cross_pareto.html" class="file-link" data-src="Baseline/Baseline_cross_pareto.html">Baseline cross pareto</a></li>
+                <li><a href="#Baseline/Baseline_perf_profile_quality.html" class="file-link" data-src="Baseline/Baseline_perf_profile_quality.html">Baseline perf profile quality</a></li>
+                <li><a href="#Baseline/Baseline_scaling_lanes_objective.html" class="file-link" data-src="Baseline/Baseline_scaling_lanes_objective.html">Baseline scaling lanes objective</a></li>
+                <li><a href="#Baseline/Baseline_scaling_lanes_time.html" class="file-link" data-src="Baseline/Baseline_scaling_lanes_time.html">Baseline scaling lanes time</a></li>
+                <li><a href="#Baseline/Baseline_scaling_movecap_objective.html" class="file-link" data-src="Baseline/Baseline_scaling_movecap_objective.html">Baseline scaling movecap objective</a></li>
+                <li><a href="#Baseline/Baseline_scaling_movecap_time.html" class="file-link" data-src="Baseline/Baseline_scaling_movecap_time.html">Baseline scaling movecap time</a></li>
+                <li><a href="#Baseline/Baseline_scaling_orders_objective.html" class="file-link" data-src="Baseline/Baseline_scaling_orders_objective.html">Baseline scaling orders objective</a></li>
+                <li><a href="#Baseline/Baseline_scaling_orders_time.html" class="file-link" data-src="Baseline/Baseline_scaling_orders_time.html">Baseline scaling orders time</a></li>
+                <li><a href="#Baseline/Baseline_scaling_stations_objective.html" class="file-link" data-src="Baseline/Baseline_scaling_stations_objective.html">Baseline scaling stations objective</a></li>
+                <li><a href="#Baseline/Baseline_scaling_stations_time.html" class="file-link" data-src="Baseline/Baseline_scaling_stations_time.html">Baseline scaling stations time</a></li>
+                <li><a href="#Baseline/Baseline_scatter_gap_vs_time.html" class="file-link" data-src="Baseline/Baseline_scatter_gap_vs_time.html">Baseline scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">CFSS</div>
+            <ul class="file-list">
+                <li><a href="#CFSS/CFSS_cross_cp_gap_box.html" class="file-link" data-src="CFSS/CFSS_cross_cp_gap_box.html">CFSS cross cp gap box</a></li>
+                <li><a href="#CFSS/CFSS_cross_cp_gap_by_param.html" class="file-link" data-src="CFSS/CFSS_cross_cp_gap_by_param.html">CFSS cross cp gap by param</a></li>
+                <li><a href="#CFSS/CFSS_cross_pareto.html" class="file-link" data-src="CFSS/CFSS_cross_pareto.html">CFSS cross pareto</a></li>
+                <li><a href="#CFSS/CFSS_perf_profile_quality.html" class="file-link" data-src="CFSS/CFSS_perf_profile_quality.html">CFSS perf profile quality</a></li>
+                <li><a href="#CFSS/CFSS_scaling_lanes_objective.html" class="file-link" data-src="CFSS/CFSS_scaling_lanes_objective.html">CFSS scaling lanes objective</a></li>
+                <li><a href="#CFSS/CFSS_scaling_lanes_time.html" class="file-link" data-src="CFSS/CFSS_scaling_lanes_time.html">CFSS scaling lanes time</a></li>
+                <li><a href="#CFSS/CFSS_scaling_movecap_objective.html" class="file-link" data-src="CFSS/CFSS_scaling_movecap_objective.html">CFSS scaling movecap objective</a></li>
+                <li><a href="#CFSS/CFSS_scaling_movecap_time.html" class="file-link" data-src="CFSS/CFSS_scaling_movecap_time.html">CFSS scaling movecap time</a></li>
+                <li><a href="#CFSS/CFSS_scaling_orders_objective.html" class="file-link" data-src="CFSS/CFSS_scaling_orders_objective.html">CFSS scaling orders objective</a></li>
+                <li><a href="#CFSS/CFSS_scaling_orders_time.html" class="file-link" data-src="CFSS/CFSS_scaling_orders_time.html">CFSS scaling orders time</a></li>
+                <li><a href="#CFSS/CFSS_scaling_stations_objective.html" class="file-link" data-src="CFSS/CFSS_scaling_stations_objective.html">CFSS scaling stations objective</a></li>
+                <li><a href="#CFSS/CFSS_scaling_stations_time.html" class="file-link" data-src="CFSS/CFSS_scaling_stations_time.html">CFSS scaling stations time</a></li>
+                <li><a href="#CFSS/CFSS_scatter_gap_vs_time.html" class="file-link" data-src="CFSS/CFSS_scatter_gap_vs_time.html">CFSS scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">CFSS_Baseline</div>
+            <ul class="file-list">
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_cross_cp_gap_box.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_cross_cp_gap_box.html">CFSS Baseline cross cp gap box</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_cross_cp_gap_by_param.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_cross_cp_gap_by_param.html">CFSS Baseline cross cp gap by param</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_cross_pareto.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_cross_pareto.html">CFSS Baseline cross pareto</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_perf_profile_quality.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_perf_profile_quality.html">CFSS Baseline perf profile quality</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_lanes_objective.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_lanes_objective.html">CFSS Baseline scaling lanes objective</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_lanes_time.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_lanes_time.html">CFSS Baseline scaling lanes time</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_movecap_objective.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_movecap_objective.html">CFSS Baseline scaling movecap objective</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_movecap_time.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_movecap_time.html">CFSS Baseline scaling movecap time</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_orders_objective.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_orders_objective.html">CFSS Baseline scaling orders objective</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_orders_time.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_orders_time.html">CFSS Baseline scaling orders time</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_stations_objective.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_stations_objective.html">CFSS Baseline scaling stations objective</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scaling_stations_time.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scaling_stations_time.html">CFSS Baseline scaling stations time</a></li>
+                <li><a href="#CFSS_Baseline/CFSS_Baseline_scatter_gap_vs_time.html" class="file-link" data-src="CFSS_Baseline/CFSS_Baseline_scatter_gap_vs_time.html">CFSS Baseline scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">GBS</div>
+            <ul class="file-list">
+                <li><a href="#GBS/GBS_cross_cp_gap_box.html" class="file-link" data-src="GBS/GBS_cross_cp_gap_box.html">GBS cross cp gap box</a></li>
+                <li><a href="#GBS/GBS_cross_cp_gap_by_param.html" class="file-link" data-src="GBS/GBS_cross_cp_gap_by_param.html">GBS cross cp gap by param</a></li>
+                <li><a href="#GBS/GBS_cross_pareto.html" class="file-link" data-src="GBS/GBS_cross_pareto.html">GBS cross pareto</a></li>
+                <li><a href="#GBS/GBS_perf_profile_quality.html" class="file-link" data-src="GBS/GBS_perf_profile_quality.html">GBS perf profile quality</a></li>
+                <li><a href="#GBS/GBS_scaling_lanes_objective.html" class="file-link" data-src="GBS/GBS_scaling_lanes_objective.html">GBS scaling lanes objective</a></li>
+                <li><a href="#GBS/GBS_scaling_lanes_time.html" class="file-link" data-src="GBS/GBS_scaling_lanes_time.html">GBS scaling lanes time</a></li>
+                <li><a href="#GBS/GBS_scaling_movecap_objective.html" class="file-link" data-src="GBS/GBS_scaling_movecap_objective.html">GBS scaling movecap objective</a></li>
+                <li><a href="#GBS/GBS_scaling_movecap_time.html" class="file-link" data-src="GBS/GBS_scaling_movecap_time.html">GBS scaling movecap time</a></li>
+                <li><a href="#GBS/GBS_scaling_orders_objective.html" class="file-link" data-src="GBS/GBS_scaling_orders_objective.html">GBS scaling orders objective</a></li>
+                <li><a href="#GBS/GBS_scaling_orders_time.html" class="file-link" data-src="GBS/GBS_scaling_orders_time.html">GBS scaling orders time</a></li>
+                <li><a href="#GBS/GBS_scaling_stations_objective.html" class="file-link" data-src="GBS/GBS_scaling_stations_objective.html">GBS scaling stations objective</a></li>
+                <li><a href="#GBS/GBS_scaling_stations_time.html" class="file-link" data-src="GBS/GBS_scaling_stations_time.html">GBS scaling stations time</a></li>
+                <li><a href="#GBS/GBS_scatter_gap_vs_time.html" class="file-link" data-src="GBS/GBS_scatter_gap_vs_time.html">GBS scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">GBS_Baseline</div>
+            <ul class="file-list">
+                <li><a href="#GBS_Baseline/GBS_Baseline_cross_cp_gap_box.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_cross_cp_gap_box.html">GBS Baseline cross cp gap box</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_cross_cp_gap_by_param.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_cross_cp_gap_by_param.html">GBS Baseline cross cp gap by param</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_cross_pareto.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_cross_pareto.html">GBS Baseline cross pareto</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_perf_profile_quality.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_perf_profile_quality.html">GBS Baseline perf profile quality</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_lanes_objective.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_lanes_objective.html">GBS Baseline scaling lanes objective</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_lanes_time.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_lanes_time.html">GBS Baseline scaling lanes time</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_movecap_objective.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_movecap_objective.html">GBS Baseline scaling movecap objective</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_movecap_time.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_movecap_time.html">GBS Baseline scaling movecap time</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_orders_objective.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_orders_objective.html">GBS Baseline scaling orders objective</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_orders_time.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_orders_time.html">GBS Baseline scaling orders time</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_stations_objective.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_stations_objective.html">GBS Baseline scaling stations objective</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scaling_stations_time.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scaling_stations_time.html">GBS Baseline scaling stations time</a></li>
+                <li><a href="#GBS_Baseline/GBS_Baseline_scatter_gap_vs_time.html" class="file-link" data-src="GBS_Baseline/GBS_Baseline_scatter_gap_vs_time.html">GBS Baseline scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">RDI</div>
+            <ul class="file-list">
+                <li><a href="#RDI/RDI_cross_cp_gap_box.html" class="file-link" data-src="RDI/RDI_cross_cp_gap_box.html">RDI cross cp gap box</a></li>
+                <li><a href="#RDI/RDI_cross_cp_gap_by_param.html" class="file-link" data-src="RDI/RDI_cross_cp_gap_by_param.html">RDI cross cp gap by param</a></li>
+                <li><a href="#RDI/RDI_cross_pareto.html" class="file-link" data-src="RDI/RDI_cross_pareto.html">RDI cross pareto</a></li>
+                <li><a href="#RDI/RDI_perf_profile_quality.html" class="file-link" data-src="RDI/RDI_perf_profile_quality.html">RDI perf profile quality</a></li>
+                <li><a href="#RDI/RDI_scaling_lanes_objective.html" class="file-link" data-src="RDI/RDI_scaling_lanes_objective.html">RDI scaling lanes objective</a></li>
+                <li><a href="#RDI/RDI_scaling_lanes_time.html" class="file-link" data-src="RDI/RDI_scaling_lanes_time.html">RDI scaling lanes time</a></li>
+                <li><a href="#RDI/RDI_scaling_movecap_objective.html" class="file-link" data-src="RDI/RDI_scaling_movecap_objective.html">RDI scaling movecap objective</a></li>
+                <li><a href="#RDI/RDI_scaling_movecap_time.html" class="file-link" data-src="RDI/RDI_scaling_movecap_time.html">RDI scaling movecap time</a></li>
+                <li><a href="#RDI/RDI_scaling_orders_objective.html" class="file-link" data-src="RDI/RDI_scaling_orders_objective.html">RDI scaling orders objective</a></li>
+                <li><a href="#RDI/RDI_scaling_orders_time.html" class="file-link" data-src="RDI/RDI_scaling_orders_time.html">RDI scaling orders time</a></li>
+                <li><a href="#RDI/RDI_scaling_stations_objective.html" class="file-link" data-src="RDI/RDI_scaling_stations_objective.html">RDI scaling stations objective</a></li>
+                <li><a href="#RDI/RDI_scaling_stations_time.html" class="file-link" data-src="RDI/RDI_scaling_stations_time.html">RDI scaling stations time</a></li>
+                <li><a href="#RDI/RDI_scatter_gap_vs_time.html" class="file-link" data-src="RDI/RDI_scatter_gap_vs_time.html">RDI scatter gap vs time</a></li>
+            </ul>
+        </div>
+        <div class="category">
+            <div class="category-title">RDI_Baseline</div>
+            <ul class="file-list">
+                <li><a href="#RDI_Baseline/RDI_Baseline_cross_cp_gap_box.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_cross_cp_gap_box.html">RDI Baseline cross cp gap box</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_cross_cp_gap_by_param.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_cross_cp_gap_by_param.html">RDI Baseline cross cp gap by param</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_cross_pareto.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_cross_pareto.html">RDI Baseline cross pareto</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_perf_profile_quality.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_perf_profile_quality.html">RDI Baseline perf profile quality</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_lanes_objective.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_lanes_objective.html">RDI Baseline scaling lanes objective</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_lanes_time.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_lanes_time.html">RDI Baseline scaling lanes time</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_movecap_objective.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_movecap_objective.html">RDI Baseline scaling movecap objective</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_movecap_time.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_movecap_time.html">RDI Baseline scaling movecap time</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_orders_objective.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_orders_objective.html">RDI Baseline scaling orders objective</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_orders_time.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_orders_time.html">RDI Baseline scaling orders time</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_stations_objective.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_stations_objective.html">RDI Baseline scaling stations objective</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scaling_stations_time.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scaling_stations_time.html">RDI Baseline scaling stations time</a></li>
+                <li><a href="#RDI_Baseline/RDI_Baseline_scatter_gap_vs_time.html" class="file-link" data-src="RDI_Baseline/RDI_Baseline_scatter_gap_vs_time.html">RDI Baseline scatter gap vs time</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="main">
+        <div id="header">
+            <h3 id="current-title">Select a figure from the menu</h3>
+            <a id="open-new" href="#" target="_blank" style="display: none;">
+                Open in new tab 
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+        </div>
+        <iframe id="figure-frame" src=""></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const iframe = document.getElementById('figure-frame');
+            const title = document.getElementById('current-title');
+            const openNew = document.getElementById('open-new');
+            const links = document.querySelectorAll('.file-link');
+
+            function loadFigureFromHash() {
+                let hash = window.location.hash.substring(1);
+                
+                // If no hash, default to the first link
+                if (!hash) {
+                    if (links.length > 0) {
+                        hash = links[0].getAttribute('data-src');
+                        // Use replaceState to avoid cluttering history with the default load
+                        history.replaceState(null, null, '#' + hash);
+                    } else {
+                        return;
+                    }
+                }
+
+                // Update UI: highlight active link in sidebar
+                links.forEach(l => l.classList.remove('active'));
+                const activeLink = Array.from(links).find(l => l.getAttribute('data-src') === hash);
+                
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                    title.textContent = activeLink.textContent;
+                    
+                    // Only scroll into view if it's not already visible
+                    const rect = activeLink.getBoundingClientRect();
+                    const sidebar = document.getElementById('sidebar');
+                    if (rect.top < sidebar.offsetTop || rect.bottom > (sidebar.offsetTop + sidebar.offsetHeight)) {
+                        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                } else {
+                    title.textContent = hash.split('/').pop().replace('.html', '').replace(/_/g, ' ');
+                }
+
+                // Load iframe and update external link
+                iframe.src = hash;
+                openNew.href = hash;
+                openNew.style.display = 'inline-flex';
+            }
+
+            // Listen for hash changes (back/forward buttons, manual URL edit)
+            window.addEventListener('hashchange', loadFigureFromHash);
+
+            // Initial load
+            loadFigureFromHash();
+        });
+    </script>
+</body>
+</html>
