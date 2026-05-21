@@ -2,21 +2,28 @@ import os
 
 def build_gallery(base_dir="interactive"):
     files_by_dir = {}
+    gantt_files_global = []
     
     # Walk through the directory
     for root, dirs, files in os.walk(base_dir):
         # Find all HTML files, exclude the index.html we are about to create
         raw_files = [f for f in files if f.endswith('.html') and f != 'index.html']
         
-        # Sort files so that files with 'gantt' in their name appear at the top, then alphabetically
-        html_files = sorted(raw_files, key=lambda x: (0 if 'gantt' in x.lower() else 1, x.lower()))
-        
-        if html_files:
-            # Get directory relative to the base_dir
-            rel_dir = os.path.relpath(root, base_dir).replace('\\', '/')
-            if rel_dir == '.':
-                rel_dir = 'Root'
-            files_by_dir[rel_dir] = html_files
+        rel_dir = os.path.relpath(root, base_dir).replace('\\', '/')
+        if rel_dir == '.':
+            rel_dir = 'Root'
+            
+        for file in sorted(raw_files, key=str.lower):
+            file_path = file if rel_dir == 'Root' else f"{rel_dir}/{file}"
+            # Clean up filename for nicer display and remove leading/trailing whitespace
+            display_name = file.replace('.html', '').replace('_', ' ').strip()
+            
+            if 'gantt' in file.lower():
+                gantt_files_global.append((file_path, display_name))
+            else:
+                if rel_dir not in files_by_dir:
+                    files_by_dir[rel_dir] = []
+                files_by_dir[rel_dir].append((file_path, display_name))
 
     # Sort the directories so Root is first, then alphabetical
     sorted_dirs = sorted(files_by_dir.keys(), key=lambda x: (x != 'Root', x))
@@ -61,16 +68,21 @@ def build_gallery(base_dir="interactive"):
         </div>
 """
 
+    # Add Gantt charts as their own dedicated section at the very top
+    if gantt_files_global:
+        html_content += f'        <div class="category">\n'
+        html_content += f'            <div class="category-title" style="background: #0d6efd; color: white;">Gantt Charts</div>\n'
+        html_content += f'            <ul class="file-list">\n'
+        for file_path, display_name in gantt_files_global:
+            html_content += f'                <li><a href="#{file_path}" class="file-link" data-src="{file_path}">{display_name}</a></li>\n'
+        html_content += f'            </ul>\n'
+        html_content += f'        </div>\n'
+
     for directory in sorted_dirs:
         html_content += f'        <div class="category">\n'
         html_content += f'            <div class="category-title">{directory}</div>\n'
         html_content += f'            <ul class="file-list">\n'
-        for file in files_by_dir[directory]:
-            file_path = file if directory == 'Root' else f"{directory}/{file}"
-            
-            # Clean up filename for nicer display
-            display_name = file.replace('.html', '').replace('_', ' ')
-            
+        for file_path, display_name in files_by_dir[directory]:
             html_content += f'                <li><a href="#{file_path}" class="file-link" data-src="{file_path}">{display_name}</a></li>\n'
         html_content += f'            </ul>\n'
         html_content += f'        </div>\n'
