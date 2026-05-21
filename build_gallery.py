@@ -6,7 +6,10 @@ def build_gallery(base_dir="interactive"):
     # Walk through the directory
     for root, dirs, files in os.walk(base_dir):
         # Find all HTML files, exclude the index.html we are about to create
-        html_files = sorted([f for f in files if f.endswith('.html') and f != 'index.html'])
+        raw_files = [f for f in files if f.endswith('.html') and f != 'index.html']
+        
+        # Sort files so that files with 'gantt' in their name appear at the top, then alphabetically
+        html_files = sorted(raw_files, key=lambda x: (0 if 'gantt' in x.lower() else 1, x.lower()))
         
         if html_files:
             # Get directory relative to the base_dir
