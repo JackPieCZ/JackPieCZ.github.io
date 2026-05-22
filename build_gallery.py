@@ -25,8 +25,19 @@ def build_gallery(base_dir="interactive"):
                     files_by_dir[rel_dir] = []
                 files_by_dir[rel_dir].append((file_path, display_name))
 
-    # Sort the directories so Root is first, then alphabetical
-    sorted_dirs = sorted(files_by_dir.keys(), key=lambda x: (x != 'Root', x))
+    # Define explicit order for specific folders, others will follow alphabetically
+    folder_priority = {
+        'CP+GWS': 1,
+        'CP+RDI': 2,
+        'Root': 3
+    }
+    
+    # Sort the directories using the explicit priority first, then alphabetical
+    def get_sort_key(dir_name):
+        priority = folder_priority.get(dir_name, 999) # 999 for anything not explicitly ordered
+        return (priority, dir_name.lower())
+
+    sorted_dirs = sorted(files_by_dir.keys(), key=get_sort_key)
 
     html_content = """<!DOCTYPE html>
 <html lang="en">
@@ -70,6 +81,9 @@ def build_gallery(base_dir="interactive"):
 
     # Add Gantt charts as their own dedicated section at the very top
     if gantt_files_global:
+        # Sort Gantt charts in reverse so that small comes before medium before large
+        gantt_files_global.sort(key=lambda x: x[1], reverse=True)
+        
         html_content += f'        <div class="category">\n'
         html_content += f'            <div class="category-title" style="background: #0d6efd; color: white;">Gantt Charts</div>\n'
         html_content += f'            <ul class="file-list">\n'
